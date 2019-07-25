@@ -97,14 +97,20 @@ class DungeonCrawler extends React.Component {
     let size = BOX_SIZE;    
     const canvas = this.canvasRef.current;
     let context = canvas.getContext('2d');
-    context.fillStyle = color;
-    context.fillRect(position.x * 40, position.y * 40, size, size);
+    context.fillStyle=color;
+    if (clear) {
+      context.fillRect(position.x*40,position.y*40, size, size);
+      context.strokeStyle='black';
+      context.strokeRect(position.x*40,position.y*40, size, size);
+    } else {
+      context.fillRect(position.x * 40, position.y * 40, size, size);
+    }
   }
 
   render() {
     return (
       <div className="App">
-       <canvas tabIndex='1' style={{border: '5px solid pink'}} ref={this.canvasRef} width={WIDTH} height={HEIGHT} id="dungeon-crawler"></canvas>
+       <canvas tabIndex='1' ref={this.canvasRef} width={WIDTH} height={HEIGHT} id="dungeon-crawler"></canvas>
        <Player draw={() => this.draw()}/>
       </div>
     );

@@ -25,30 +25,40 @@ class DungeonCrawler extends React.Component {
     }
   }
 
-  drawBoard(context) {
+  drawBoard() {
     let bw = WIDTH;
     let bh = HEIGHT;
-    let interval = BOX_SIZE
+    let interval = BOX_SIZE;
 
-    for (let x = 0; x <= bw; x += interval) {
-      context.moveTo(x, 0);
-      context.lineTo(x, bw);
+    const canvas = document.getElementById("dungeon-crawler");
+    const context =  canvas.getContext("2d");
+    context.strokeStyle='black';
+
+    for (let x = 0; x <= bw / interval; x ++) {
+      for (let y = 0; y <= bh / interval; y++) {
+        let xPos = x * interval;
+        let yPos = y * interval;
+        context.strokeRect(xPos, yPos, interval, interval);;
+      }
     }
+
     
-    for (let y = 0; y <= bh; y += interval) {
-      context.moveTo(0, y);
-      context.lineTo(bh, y);
-    }
+    
+    // for (let y = 0; y <= bh; y += interval) {
+    //   context.moveTo(0, y);
+    //   context.lineTo(bh, y);
+    // }
 
-    context.stroke();    
+    
   }
 
   componentDidMount() {
-    const canvas = this.canvasRef.current;
-    this.context = canvas.getContext('2d');
-    this.drawBoard(this.context);
-    this.draw(this.state.playerPosition);
+    const canvas = document.getElementById("dungeon-crawler");
+    const context =  canvas.getContext("2d");
+    this.drawBoard();
+    this.draw(this.state.playerPosition, false);
     document.addEventListener("keydown", (e) => this.handleKeyDown(e));
+    
   }
 
   handleKeyDown(e) {
@@ -62,7 +72,7 @@ class DungeonCrawler extends React.Component {
       playerPosition: newPlayerPosition,
     });
     this.draw(currentPosition, true);
-    this.draw(newPlayerPosition);
+    this.draw(newPlayerPosition, false);
   }
 
   getNextPosition(keyCode) {
@@ -92,11 +102,12 @@ class DungeonCrawler extends React.Component {
     return false;
   }
 
-  draw(position, clear=false) {
+  draw(position, clear) {
     let color = clear ? 'white' : 'black';
-    let size = BOX_SIZE;    
-    const canvas = this.canvasRef.current;
-    let context = canvas.getContext('2d');
+    let size = BOX_SIZE;
+
+    const canvas = document.getElementById("dungeon-crawler");
+    let context =  canvas.getContext("2d");
     context.fillStyle=color;
     if (clear) {
       context.fillRect(position.x*40,position.y*40, size, size);
@@ -110,8 +121,8 @@ class DungeonCrawler extends React.Component {
   render() {
     return (
       <div className="App">
-       <canvas tabIndex='1' ref={this.canvasRef} width={WIDTH} height={HEIGHT} id="dungeon-crawler"></canvas>
-       <Player draw={() => this.draw()}/>
+       <canvas tabIndex="1" ref="canvas" width={WIDTH} height={HEIGHT} id="dungeon-crawler"></canvas>
+       <Player/>
       </div>
     );
   }
